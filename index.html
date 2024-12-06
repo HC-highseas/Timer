@@ -1,0 +1,470 @@
+BmN
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width , initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width , initial-scale=1.0">
+    <meta name="author" content="Matt Cannon">
+    <meta name="contact" content="mc@mattcannon.design">
+    <meta name="description" content="A fun seasonal countdown timer to match your seasonal mood">
+    <meta name="keywords" content="codepenchallenge , cpc-timers , countdown , timer">
+    <meta name="last-modified" content="2024-09-08">
+    <meta http-equiv="Content-Language" content="en">
+    <meta name="generator" content="HTML5 , CSS3 , JavaScript">
+    <title>Seasonal Timer</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rubik:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        body ,   
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        #video-background {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1000;
+            background-size: cover;
+            filter: blur(5px);
+            transform: scale(1.1);
+            opacity: 0;
+            /* Initially hide the video */
+            transition: opacity 1s ease-in-out;
+            /* Smooth transition for fade-in effect */
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0 ,    0 ,    0 ,    0.3);
+            z-index: -999;
+        }
+
+        body {
+            color: #fff;
+            font-family: "Rubik" ,    sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 95vh;
+        }
+
+        .con {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 210px;
+            max-width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            transform: translateY(7px) scale(1);
+            transition: transform 0.3s ease;
+        }
+
+        .con {
+            position: relative;
+            width: 100%;
+            padding-bottom: 100%;
+        }
+
+        .count_svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .cout_c {
+            fill: none;
+            stroke: url(#calm-gradient);
+            stroke-width: 10;
+            stroke-linecap: round;
+        }
+
+        .cont_text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50% ,    -50%);
+            font-size: 2em;
+            font-family: "Orbitron" ,    sans-serif;
+            text-shadow: 0 0 10px rgba(255 ,    255 ,    255 ,    0.7);
+        }
+
+        .count_in_wrap {
+            position: relative;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .cout_in {
+            width: 100%;
+            background-color: rgba(0 ,    0 ,    0 ,    0.5);
+            border: 2px solid #ff69b4;
+            color: #fff;
+            padding: 10px 30px 10px 10px;
+            font-family: "Rubik" ,    sans-serif;
+            text-align: center;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+
+        .cout_in::-webkit-inner-spin-button ,   
+        .cout_in::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .cout_in[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        .in_arr {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .in_arr i {
+            color: #fff;
+            font-size: 12px;
+            cursor: pointer;
+            margin: 0px 0;
+        }
+
+        .btn_con {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .btn {
+            background-color: rgba(0 ,    0 ,    0 ,    0.5);
+            border: 2px solid #fff;
+            color: #fff;
+            padding: 10px 15px;
+            font-family: "Rubik" ,    sans-serif;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48%;
+            position: relative;
+        }
+
+        .btn:hover {
+            background-color: rgba(255 ,    255 ,    255 ,    0.2);
+            box-shadow: 0 0 10px rgba(255 ,    255 ,    255 ,    0.5);
+        }
+
+        .btn i {
+            margin-right: 5px;
+            transition: transform 0.5s;
+        }
+
+        .btn i.flipped {
+            transform: rotate(180deg);
+        }
+
+        .icon {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .ic {
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .season-icon.active {
+            color: inherit;
+        }
+
+        @keyframes moveGradient {
+            0% {
+                stroke-dashoffset: 0;
+            }
+
+            100% {
+                stroke-dashoffset: -283;
+            }
+        }
+
+        .tooltip {
+            visibility: hidden;
+            width: 120px;
+            background-color: rgba(0 ,    0 ,    0 ,    0.8);
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: rgba(0 ,    0 ,    0 ,    0.8) transparent transparent transparent;
+        }
+
+        .btn:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <video autoplay muted loop id="video-background">
+        <source src="" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="overlay"></div>
+    <div class="con" id="mainContainer">
+        <div class="con">
+            <svg class="count_svg" viewBox="0 0 100 100">
+                <defs>
+                    <linearGradient id="calm-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#9a4e2b" />
+                        <stop offset="50%" style="stop-color:#693d1e" />
+                        <stop offset="100%" style="stop-color:#3b2416" />
+                    </linearGradient>
+                </defs>
+                <circle class="cout_c" cx="50" cy="50" r="45"></circle>
+            </svg>
+            <div class="cont_text" id="countdown">00:00</div>
+        </div>
+        <div class="count_in_wrap">
+            <input type="number" class="cout_in" id="timeInput" placeholder="Enter Seconds" min="1">
+            <div class="in_arr">
+                <i class="fas fa-chevron-up" onclick="incrementTime()"></i>
+                <i class="fas fa-chevron-down" onclick="decrementTime()"></i>
+            </div>
+        </div>
+        <div class="btn_con">
+            <button class="btn" onclick="startCountdown()" id="startButton">
+                <i class="fa-solid fa-hourglass-start" id="startIcon"></i> Start
+                <span class="tooltip">Enter Seconds</span>
+            </button>
+            <button class="btn" onclick="stopCountdown()" id="stopButton" disabled>
+                <i class="fa-solid fa-hourglass-start" id="stopIcon"></i> Stop
+            </button>
+        </div>
+        <div class="icon">
+            <i class="fas fa-snowflake ic" onclick="changeSeason('winter')" id="winterIcon"></i>
+            <i class="fas fa-seedling ic" onclick="changeSeason('spring')" id="springIcon"></i>
+            <i class="fas fa-sun ic" onclick="changeSeason('summer')" id="summerIcon"></i>
+            <i class="fas fa-leaf ic active" onclick="changeSeason('fall')" id="fallIcon"></i>
+        </div>
+    </div>
+    <script>
+        let countdownInterval;
+        let isRunning = false;
+        const countdownCircle = document.querySelector(".cout_c");
+        const countdownText = document.getElementById("countdown");
+        const timeInput = document.getElementById("timeInput");
+        const startButton = document.getElementById("startButton");
+        const stopButton = document.getElementById("stopButton");
+        const startIcon = document.getElementById("startIcon");
+        const stopIcon = document.getElementById("stopIcon");
+        const circumference = 2 * Math.PI * 45;
+        const videoBackground = document.getElementById("video-background");
+        const mainContainer = document.getElementById("mainContainer");
+        const seasonVideos = {
+            winter:
+                "https://video.wixstatic.com/video/60eca0_29ea780c363b43888e81b9e09f0cc3cc/1080p/mp4/file.mp4" ,   
+            spring:
+                "https://video.wixstatic.com/video/60eca0_2631445d7acd4551bc0307e28bd0c846/1080p/mp4/file.mp4" ,   
+            summer:
+                "https://video.wixstatic.com/video/60eca0_1544aaa8111a4361ac919ef74527938b/1080p/mp4/file.mp4" ,   
+            fall:
+                "https://video.wixstatic.com/video/60eca0_ed5232fb25d54c45ba71de8557fafb3c/1080p/mp4/file.mp4"
+        };
+        const seasonColors = {
+            winter: ["#e0f7fa" ,    "#b2ebf2" ,    "#80deea"] ,   
+            spring: ["#ADD8E6" ,    "#FFFACD" ,    "#FFB6C1"] ,   
+            summer: ["#FF4500" ,    "#FF7F50" ,    "#FFD700"] ,   
+            fall: ["#A0522D" ,    "#D2691E" ,    "#FF8C00"]
+        };
+
+        function preloadVideo(url) {
+            return new Promise((resolve) => {
+                const video = document.createElement("video");
+                video.preload = "auto";
+                video.src = url;
+                video.oncanplaythrough = () => resolve();
+            });
+        }
+
+        async function changeSeason(season) {
+
+            await preloadVideo(seasonVideos[season]);
+            videoBackground.src = seasonVideos[season];
+            videoBackground.load();
+            videoBackground.oncanplaythrough = () => {
+                videoBackground.style.opacity = 1;
+            };
+
+            const gradient = document.getElementById("calm-gradient");
+            gradient.innerHTML = `
+    <stop offset="0%" style="stop-color:${seasonColors[season][0]}" />
+    <stop offset="50%" style="stop-color:${seasonColors[season][1]}" />
+    <stop offset="100%" style="stop-color:${seasonColors[season][2]}" />
+  `;
+
+            const countdownInput = document.querySelector(".cout_in");
+            countdownInput.style.borderColor = seasonColors[season][2];
+
+            document.querySelectorAll(".ic").forEach((icon) => {
+                icon.classList.remove("active");
+                icon.style.color = "";
+            });
+
+            const activeIcon = document.getElementById(`${season}Icon`);
+            activeIcon.classList.add("active");
+            activeIcon.style.color = seasonColors[season][2];
+        }
+
+        function startCountdown() {
+            const duration = parseInt(timeInput.value);
+            if (isNaN(duration) || duration <= 0) {
+                if (!timeInput.value.trim()) {
+                    showTooltip();
+                }
+                return;
+            }
+
+            if (!isRunning) {
+                isRunning = true;
+                let timeLeft = duration;
+
+                countdownCircle.style.animation = "none";
+                countdownCircle.getBoundingClientRect();
+                countdownCircle.style.animation = `moveGradient ${duration}s linear`;
+                countdownCircle.style.strokeDasharray = `${circumference} ${circumference}`;
+
+                updateCountdown(timeLeft ,    duration);
+
+                countdownInterval = setInterval(() => {
+                    timeLeft--;
+                    if (timeLeft < 0) {
+                        stopCountdown();
+                        return;
+                    }
+                    updateCountdown(timeLeft ,    duration);
+                } ,    1000);
+
+                startButton.disabled = true;
+                stopButton.disabled = false;
+                timeInput.disabled = true;
+                startIcon.classList.add("flipped");
+            }
+        }
+
+        function stopCountdown() {
+            if (isRunning) {
+                clearInterval(countdownInterval);
+                isRunning = false;
+
+                countdownCircle.style.animation = "none";
+                countdownCircle.style.strokeDashoffset = circumference;
+
+                startButton.disabled = false;
+                stopButton.disabled = true;
+                timeInput.disabled = false;
+                stopIcon.classList.add("flipped");
+                startIcon.classList.remove("flipped");
+            }
+        }
+
+        function updateCountdown(timeLeft ,    duration) {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            countdownText.textContent = `${minutes.toString().padStart(2 ,    "0")}:${seconds.toString().padStart(2 ,    "0")}`;
+
+            const progress = (duration - timeLeft) / duration;
+            const dashoffset = circumference * (1 - progress);
+            countdownCircle.style.strokeDashoffset = dashoffset;
+        }
+
+
+        function incrementTime() {
+            timeInput.value = (parseInt(timeInput.value) || 0)  +  1;
+        }
+
+        function decrementTime() {
+            timeInput.value = Math.max((parseInt(timeInput.value) || 0) - 1 ,    1);
+        }
+
+        function showTooltip() {
+            const tooltip = startButton.querySelector(".tooltip");
+            tooltip.style.visibility = "visible";
+            tooltip.style.opacity = "1";
+            setTimeout(() => {
+                tooltip.style.visibility = "hidden";
+                tooltip.style.opacity = "0";
+            } ,    2000);
+        }
+
+        timeInput.addEventListener("input" ,    () => {
+            if (timeInput.value.trim()) {
+                startButton.querySelector(".tooltip").style.display = "none";
+            } else {
+                startButton.querySelector(".tooltip").style.display = "block";
+            }
+        });
+
+        changeSeason("winter");
+
+        function resizeContainer(scale) {
+            mainContainer.style.transform = `scale(${scale})`;
+        }
+
+    </script>
+</body>
+
+</html>
